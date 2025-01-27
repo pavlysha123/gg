@@ -1,3 +1,5 @@
+Произошла ошибка в скрипте кастомизации: Invoke() Целевой объект: 'Поиск типовых деталей' Скрипт объекта: 'Поиск типовых деталей (Пермские насосы)' Тип "<>f__AnonymousType0`3[[System.UInt64, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089],[System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089],[System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" в сборке "CustomizationCode588, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" не помечен как сериализуемый. 
+
 public override object Invoke( UserSession session, Object inputParams )
 {
     var type = inputParams as string;
