@@ -1,9 +1,11 @@
-var setting = new Newtonsoft.Json.JsonSerializerSettings()
-                {
-                    //Culture = new CultureInfo(
-                };
+Не удалось привести тип объекта "System.Drawing.Bitmap" к типу "System.Drawing.Imaging.Metafile"
 
-                var result = Service.GetScriptingTask( "GetListObjectsDetail" ).Invoke(type).ToString();
-                List<object> items = Newtonsoft.Json.JsonConvert.DeserializeObject<List<object>>(result, setting);
-                                
-                renderArgs["objects"] = items;
+try{
+      var tp = new InfoObject( (DataContainer)null, @"InfoObjects\StartScreen\TypicalParts" );
+      var mf = Service.GetScriptingTask( "GetDrawingID" ).Invoke(urlArgs.Form["id"]) as Image;
+      tp["Preview"] = mf;
+      
+      Service.UI.ShowObjectProperties( tp, false );
+  }catch (Exception e){
+      Service.UI.ShowMessage(e.Message);
+  }
