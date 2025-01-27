@@ -1,1 +1,9 @@
-Произошла ошибка в скрипте кастомизации: Invoke() Целевой объект: 'Поиск типовых деталей' Скрипт объекта: 'Поиск типовых деталей (Пермские насосы)' Ошибка в программной логике. Не удалось разобрать ответ сервера Не удалось загрузить файл или сборку "CustomizationCode592, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" либо одну из их зависимостей. Не удается найти указанный файл. 
+var setting = new Newtonsoft.Json.JsonSerializerSettings()
+                {
+                    //Culture = new CultureInfo(
+                };
+
+                var result = Service.GetScriptingTask( "GetListObjectsDetail" ).Invoke(type).ToString();
+                List<object> items = Newtonsoft.Json.JsonConvert.DeserializeObject<List<object>>(result, setting);
+                                
+                renderArgs["objects"] = items;
