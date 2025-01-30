@@ -370,12 +370,12 @@ class AvitoParse:
                                    if result:
                                           self.update_or_add_row_sheets(result)
                      
-                     "Дозагружаем оставшиеся данные"
-                     if self.batch_update:
-                            self.sheet.spreadsheet.values_batch_update({
-                                   'value_input_option': 'USER_ENTERED',
-                                   'data': self.batch_update
-                            })
+                     # "Дозагружаем оставшиеся данные"
+                     # if self.batch_update:
+                     #        self.sheet.spreadsheet.values_batch_update({
+                     #               'value_input_option': 'USER_ENTERED',
+                     #               'data': self.batch_update
+                     #        })
               logger.success('Парсер закончил работу')
 
 if __name__ == "__main__":
