@@ -147,54 +147,70 @@ class AvitoParse:
               link_name = 'Ссылка'
               days_active = 'Дней активно'
 
-              "Проверяет, существует ли ссылка на листе"
-              cell_list = None
-              if data[link_name] in self.all_link_sheet:
-                     cell_list = self.all_link_sheet.index(data[link_name])
+              try:
+                     "Проверяет, существует ли ссылка на листе"
+                     cell_list = None
+                     if data[link_name] in self.all_link_sheet:
+                            cell_list = self.all_link_sheet.index(data[link_name])
 
-              if cell_list is not None or cell_list == 0:
-                     "Обновляем существующию строку (ищется по столбцу 'Ссылка')"
-                     row_data = list(self.sheet_get_all_records[cell_list].values())
-                     update_data = row_data.copy()
+                     if cell_list is not None or cell_list == 0:
+                            "Обновляем существующию строку (ищется по столбцу 'Ссылка')"
+                            row_data = list(self.sheet_get_all_records[cell_list].values())
+                            update_data = row_data.copy()
 
-                     "Если нет мест, то добавляем места для значений"
-                     if len(row_data) < len(self.sheet_headers):
-                            for i in range(len(self.sheet_headers) - len(row_data)):
-                                   update_data[i] = ''
+                            "Если нет мест, то добавляем места для значений"
+                            if len(row_data) < len(self.sheet_headers):
+                                   for i in range(len(self.sheet_headers) - len(row_data)):
+                                          update_data[i] = ''
 
-                     "Обновляем только те столбцы, которые были получены в data"
-                     for i in range(len(self.sheet_headers)):
-                            header = self.sheet_headers[i]
-                            if days_active == header and row_data[i]:
-                                   update_data[i] = int(row_data[i]) + 1
-                            if header in data and update_data[i] != data[header]:
-                                   update_data[i] = data[header]
+                            "Обновляем только те столбцы, которые были получены в data"
+                            for i in range(len(self.sheet_headers)):
+                                   header = self.sheet_headers[i]
+                                   if days_active == header and row_data[i]:
+                                          update_data[i] = int(row_data[i]) + 1
+                                   if header in data and update_data[i] != data[header]:
+                                          update_data[i] = data[header]
 
-                     "Добавляем обновленные данные в партию"
-                     if update_data != row_data:
-                            self.batch_update.append({
-                                   'range': f'{self.sheet_title}!A{cell_list + 2}',
-                                   'values': [update_data]
-                            })
-              else:
-                     "Добавлям новую строку"
-                     new_row = [data.get(header, '') for header in self.sheet_headers]
-                     self.batch_update.append({
-                            'range': f'{self.sheet_title}!A{len(self.sheet_get_all_records) + 2 + self.line_sheet}',
-                            'values': [new_row]
-                     })
-                     "Добавляем +1 строку, так как работаем со старыми данными"
-                     self.line_sheet += 1
+                            "Добавляем обновленные данные в партию"
+                            if update_data != row_data:
+                                   # self.batch_update.append({
+                                   #        'range': f'{self.sheet_title}!A{cell_list + 2}',
+                                   #        'values': [update_data]
+                                   # })
+                                   update = {
+                                          'range': f'{self.sheet_title}!A{cell_list + 2}',
+                                          'values': [update_data]
+                                   }
+                     else:
+                            "Добавлям новую строку"
+                            new_row = [data.get(header, '') for header in self.sheet_headers]
+                            # self.batch_update.append({
+                            #        'range': f'{self.sheet_title}!A{len(self.sheet_get_all_records) + 2 + self.line_sheet}',
+                            #        'values': [new_row]
+                            # })
+                            update = {
+                                   'range': f'{self.sheet_title}!A{len(self.sheet_get_all_records) + 2 + self.line_sheet}',
+                                   'values': [new_row]
+                            }
+                            "Добавляем +1 строку, так как работаем со старыми данными"
+                            self.line_sheet += 1
 
-              "Добавляем/обновляем значения каждые 500 позиций"
-              if self.batch_update and len(self.batch_update) >= 500:
-                     time.sleep(3)
-                     batch_update = self.batch_update
-                     self.batch_update = []
                      self.sheet.spreadsheet.values_batch_update({
                             'value_input_option': 'USER_ENTERED',
-                            'data': batch_update
+                            'data': update
                      })
+              except Exception as error:
+                     logger.error(f"Ошибка: {error}")
+
+              # "Добавляем/обновляем значения каждые 500 позиций"
+              # if self.batch_update and len(self.batch_update) >= 500:
+              #        time.sleep(3)
+              #        batch_update = self.batch_update
+              #        self.batch_update = []
+              #        self.sheet.spreadsheet.values_batch_update({
+              #               'value_input_option': 'USER_ENTERED',
+              #               'data': batch_update
+              #        })
 
        "Проверяет на уникальность ссылки в базе"
        def is_viewed(self, url: str) -> bool:
