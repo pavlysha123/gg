@@ -1,7 +1,4 @@
 jQuery(function ($) {
-	window.geocodeCache = new Map();
-	window.routeCache = new Map();
-
 	// Брейкпоинты
 	var sizeXXL = window.matchMedia('(min-width: 1400px)');
 	var sizeXL = window.matchMedia('(min-width: 1200px)');
@@ -2182,6 +2179,3 @@ jQuery(document).ready(function($) {
 		};
 
 });
-
-
-
